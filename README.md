@@ -1,6 +1,6 @@
 # Buddy Engine - An engine for the common man
 
--------------------------------------![Buddy Logo](assets/buddy_logo.png)
+![Buddy Logo](assets/buddy_logo.png)
 
 ## Dependencies
 
