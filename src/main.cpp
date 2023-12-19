@@ -17,16 +17,13 @@ int main()
   InitHelper initHelper;
   HelloTriangle helloTriangle;
 
-
+  #ifdef DEBUG_EN
+  std::cout << "DEBUG ENABLED\n";
+  #endif
   // Initialize window
   initHelper.initWindow();
 
   initHelper.initVulkan();
-
-  glm::mat4 matrix;
-  glm::vec4 vec;
-  auto test = matrix * vec;
-
 
   try
   {
