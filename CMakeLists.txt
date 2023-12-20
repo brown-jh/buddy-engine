@@ -20,4 +20,4 @@ target_include_directories(buddy_engine PUBLIC
                            "${PROJECT_SOURCE_DIR}/src"
                            )
 #alt VK_USE_PLATFORM_XCB_KHR VK_USE_PLATFORM_WAYLAND_KHR
-target_compile_options(buddy_engine PRIVATE -DDEBUG_EN )                           
+target_compile_options(buddy_engine PRIVATE -DDEBUG_EN)
