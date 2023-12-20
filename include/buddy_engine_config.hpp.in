@@ -1,0 +1,2 @@
+#define buddy_engine_VERSION_MAJOR @buddy_engine_VERSION_MAJOR@
+#define buddy_engine_VERSION_MINOR @buddy_engine_VERSION_MINOR@
