@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR})
 
 project(buddy_engine VERSION 0.0)
 
@@ -20,6 +21,7 @@ target_link_libraries(buddy_engine PUBLIC buddy_lib
 
 target_include_directories(buddy_engine PUBLIC
                            "${PROJECT_SOURCE_DIR}/src"
+                           "${PROJECT_BINARY_DIR}"
                            )
 #alt VK_USE_PLATFORM_XCB_KHR VK_USE_PLATFORM_WAYLAND_KHR
 target_compile_options(buddy_engine PRIVATE -DDEBUG_EN )
