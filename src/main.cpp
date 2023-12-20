@@ -1,8 +1,6 @@
-
-
 #include "InitHelper.h"
 #include "HelloTriangle.h"
-
+#include "buddy_engine_config.hpp"
 
 
 void error_callback(int error, const char* description)
@@ -12,8 +10,11 @@ void error_callback(int error, const char* description)
 
 
 
-int main()
+int main(int argc, char *argv[])
 {
+  std::cout << "Loading " << argv[0] << " VERSION " << 
+    buddy_engine_VERSION_MAJOR << "." <<buddy_engine_VERSION_MINOR << std::endl;
+
   InitHelper initHelper;
   HelloTriangle helloTriangle;
 
