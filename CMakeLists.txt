@@ -28,4 +28,4 @@ message(PROJECT_INCLUDE_DIR="${PROJECT_INCLUDE_DIR}")
 
 
 #alt VK_USE_PLATFORM_XCB_KHR VK_USE_PLATFORM_WAYLAND_KHR
-target_compile_options(buddy_engine PRIVATE -DDEBUG_EN )
+target_compile_options(buddy_engine PRIVATE -DDEBUG_EN)
