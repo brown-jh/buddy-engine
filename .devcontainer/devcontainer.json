@@ -1,0 +1,10 @@
+{
+  "image": "buddy-dev-container",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode-remote.remote-containers"
+      ]
+    }
+  }
+}
