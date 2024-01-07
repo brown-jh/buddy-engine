@@ -1,22 +1,36 @@
-#include "InitHelper.h"
+
 #include "HelloTriangle.h"
 #include "buddy_engine_config.hpp"
 
+InitHelper initHelper;
+HelloTriangle helloTriangle;
 
 void error_callback(int error, const char* description)
 {
     fprintf(stderr, "Error: %s\n", description);
 }
 
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    if (key == GLFW_KEY_W && action == GLFW_PRESS)
+    {
+      if (helloTriangle.test < 1.0f) helloTriangle.test += .1f;
+      std::cout << "w down\n";
+    }
 
+    if (key == GLFW_KEY_S && action == GLFW_PRESS)
+    {
+      if (helloTriangle.test > 0.0f) helloTriangle.test -= .1f;
+      std::cout <<"s down\n";
+    }
+}
 
 int main(int argc, char *argv[])
 {
   std::cout << "Loading " << argv[0] << " VERSION " << 
     buddy_engine_VERSION_MAJOR << "." <<buddy_engine_VERSION_MINOR << std::endl;
 
-  InitHelper initHelper;
-  HelloTriangle helloTriangle;
+
 
   #ifdef DEBUG_EN
   std::cout << "DEBUG ENABLED\n";
@@ -26,9 +40,12 @@ int main(int argc, char *argv[])
 
   initHelper.initVulkan();
 
+  glfwSetKeyCallback(initHelper.getWindow(), key_callback);
+
+
   try
   {
-    helloTriangle.run(initHelper.getWindow());
+    helloTriangle.run(initHelper.getWindow(), &initHelper);
   } catch (const std::exception& e)
   {
     std::cerr << e.what() << std::endl;

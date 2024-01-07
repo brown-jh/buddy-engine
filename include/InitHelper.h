@@ -2,11 +2,13 @@
 #include <GLFW/glfw3.h>
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
+#include <glm/glm.hpp>
 #include <glm/vec4.hpp>
 #include <glm/mat4x4.hpp>
 #include <set>
 #include <iostream>
 
+#include <array>
 #include <vector>
 #include <cstring>
 #include <map>
@@ -38,6 +40,39 @@ class InitHelper
       std::vector<VkPresentModeKHR> presentModes;
     };
 
+    struct Vertex
+    {
+      glm::vec2 pos;
+      glm::vec3 color;
+
+      static VkVertexInputBindingDescription getBindingDescription()
+      {
+        VkVertexInputBindingDescription bindingDescription{};
+        bindingDescription.binding = 0;
+        bindingDescription.stride = sizeof(Vertex);
+        bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+
+        return bindingDescription;
+      }  
+
+      static std::array<VkVertexInputAttributeDescription, 2> getAttributeDescriptions()
+      {
+        std::array<VkVertexInputAttributeDescription, 2> attributeDescriptions{};
+        attributeDescriptions[0].binding = 0;
+        attributeDescriptions[0].location = 0;
+        attributeDescriptions[0].format = VK_FORMAT_R32G32_SFLOAT;
+        attributeDescriptions[0].offset = offsetof(Vertex, pos);
+
+        attributeDescriptions[1].binding = 0;
+        attributeDescriptions[1].location = 1;
+        attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
+        attributeDescriptions[1].offset = offsetof(Vertex, color);
+
+        return attributeDescriptions;
+      }
+  
+    };
+
     //functions
     void initWindow();
     void initVulkan();
@@ -60,6 +95,18 @@ class InitHelper
     void createImageViews();
     void createGraphicsPipeline();
     void createRenderPass();
+    void createCommandPool();
+    void createVertexBuffer();
+    void createCommandBuffers();
+    void createFramebuffers();
+    void createSyncObjects();
+    void drawFrame();
+    uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
+    void waitDeviceIdle();
+    void recreateSwapChain();
+    static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
+    void cleanupSwapChain();
+    void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
     static std::vector<char> readFile(const std::string& filename);
     bool checkDeviceExtensionSupport(VkPhysicalDevice device);
     void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
@@ -74,6 +121,22 @@ class InitHelper
   
     
     // vars
+
+    VkDevice device;
+    VkDeviceMemory vertexBufferMemory;
+
+
+    // THE TRIANGLE (from earlier, now no longer part of the shader file)
+    std::vector<Vertex> vertices =
+    {
+      {{0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+      {{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
+      {{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
+      {{-1.0f, -1.0f}, {0.0f, 1.0f, 0.0f}},
+      {{1.0f, -1.0f}, {0.0f, 0.0f, 1.0f}},
+      {{0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}}
+    };
+
     GLFWwindow* getWindow();
 
     const std::vector<const char*> validationLayers =
@@ -98,11 +161,14 @@ class InitHelper
     void createInstance();
 
     // vars
+    const int MAX_FRAMES_IN_FLIGHT = 2;
+    const int WIDTH = 800;
+    const int HEIGHT = 600;
+    uint32_t currentFrame = 0;
     GLFWwindow* window;
     VkInstance instance;
     VkDebugUtilsMessengerEXT debugMessenger;
     VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
-    VkDevice device;
     VkQueue graphicsQueue;
     VkSurfaceKHR surface;
     VkQueue presentQueue;
@@ -114,5 +180,15 @@ class InitHelper
     VkRenderPass renderPass;
     VkPipelineLayout pipelineLayout;
     VkPipeline graphicsPipeline;
+    VkCommandPool commandPool;
+    std::vector<VkCommandBuffer> commandBuffers;
+    std::vector<VkFramebuffer> swapChainFramebuffers;
+    std::vector<VkSemaphore> imageAvailableSemaphores;
+    std::vector<VkSemaphore> renderFinishedSemaphores;
+    std::vector<VkFence> inFlightFences;
+    VkBuffer vertexBuffer;
+    bool framebufferResized = false;
+  
+
 
 };
