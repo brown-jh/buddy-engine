@@ -15,13 +15,26 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     if (key == GLFW_KEY_W && action == GLFW_PRESS)
     {
       if (helloTriangle.test < 1.0f) helloTriangle.test += .1f;
+      helloTriangle.y -= .1f;
       std::cout << "w down\n";
+
     }
 
     if (key == GLFW_KEY_S && action == GLFW_PRESS)
     {
       if (helloTriangle.test > 0.0f) helloTriangle.test -= .1f;
       std::cout <<"s down\n";
+      helloTriangle.y += .1f;
+    }
+
+    if (key == GLFW_KEY_A && action == GLFW_PRESS)
+    {
+      helloTriangle.x -= .1f;
+    }
+
+    if (key == GLFW_KEY_D && action == GLFW_PRESS)
+    {
+      helloTriangle.x += .1f;
     }
 }
 

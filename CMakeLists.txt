@@ -23,7 +23,7 @@ target_include_directories(buddy_engine PUBLIC
                            )
 
 if(WIN32)
-    include(C:\\include\\vcpkg\\scripts\\buildsystems\\vcpkg.cmake)
+    include(C:\\Libraries\\vcpkg\\vcpkg\\scripts\\buildsystems\\vcpkg.cmake)
 endif(WIN32)
 
 find_package(glfw3 REQUIRED)

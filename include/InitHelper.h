@@ -5,9 +5,10 @@
 #include <glm/glm.hpp>
 #include <glm/vec4.hpp>
 #include <glm/mat4x4.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <set>
 #include <iostream>
-
+#include <chrono>
 #include <array>
 #include <vector>
 #include <cstring>
@@ -17,6 +18,7 @@
 #include <cstdint>
 #include <limits>
 #include <fstream>
+#include <iostream>
 
 
 class InitHelper
@@ -73,6 +75,13 @@ class InitHelper
   
     };
 
+    struct UniformBufferObject
+    {
+      glm::mat4 model;
+      glm::mat4 view;
+      glm::mat4 proj;
+    };
+
     //functions
     void initWindow();
     void initVulkan();
@@ -99,8 +108,13 @@ class InitHelper
     void createVertexBuffer();
     void createCommandBuffers();
     void createFramebuffers();
+    void createDescriptorPool();
+    void createIndexBuffer();
     void createSyncObjects();
+    void createDescriptorSetLayout();
+    void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
     void drawFrame();
+    void createDescriptorSets();
     uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
     void waitDeviceIdle();
     void recreateSwapChain();
@@ -109,6 +123,9 @@ class InitHelper
     void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
     static std::vector<char> readFile(const std::string& filename);
     bool checkDeviceExtensionSupport(VkPhysicalDevice device);
+    void createUniformBuffers();
+    void updateUniformBuffer(uint32_t currentImage);
+    void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
     void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
     VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger);
     void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator);
@@ -121,12 +138,22 @@ class InitHelper
   
     
     // vars
-
+    // here for now, should prob be private
     VkDevice device;
     VkDeviceMemory vertexBufferMemory;
+    VkBuffer vertexBuffer;
+
+    VkBuffer indexBuffer;
+    VkDeviceMemory indexBufferMemory;
+
+    std::vector<VkBuffer> uniformBuffers;
+    std::vector<VkDeviceMemory> uniformBuffersMemory;
+    std::vector<void*> uniformBuffersMapped;
+    
 
 
     // THE TRIANGLE (from earlier, now no longer part of the shader file)
+    /*
     std::vector<Vertex> vertices =
     {
       {{0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}},
@@ -136,6 +163,19 @@ class InitHelper
       {{1.0f, -1.0f}, {0.0f, 0.0f, 1.0f}},
       {{0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}}
     };
+    */
+   std::vector<Vertex> vertices =
+   {
+    {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+    {{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
+    {{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
+    {{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}}
+   };
+
+   const std::vector<uint16_t> indices = 
+   {
+    0, 1, 2, 2, 3, 0
+   };
 
     GLFWwindow* getWindow();
 
@@ -179,6 +219,9 @@ class InitHelper
     VkExtent2D swapChainExtent;
     VkRenderPass renderPass;
     VkPipelineLayout pipelineLayout;
+    VkDescriptorPool descriptorPool;
+    std::vector<VkDescriptorSet> descriptorSets;
+    VkDescriptorSetLayout descriptorSetLayout;
     VkPipeline graphicsPipeline;
     VkCommandPool commandPool;
     std::vector<VkCommandBuffer> commandBuffers;
@@ -186,7 +229,9 @@ class InitHelper
     std::vector<VkSemaphore> imageAvailableSemaphores;
     std::vector<VkSemaphore> renderFinishedSemaphores;
     std::vector<VkFence> inFlightFences;
-    VkBuffer vertexBuffer;
+  
+
+
     bool framebufferResized = false;
   
 
