@@ -5,6 +5,7 @@
 InitHelper initHelper;
 HelloTriangle helloTriangle;
 
+
 void error_callback(int error, const char* description)
 {
     fprintf(stderr, "Error: %s\n", description);
@@ -12,30 +13,43 @@ void error_callback(int error, const char* description)
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    if (key == GLFW_KEY_W && action == GLFW_PRESS)
+    if (key == GLFW_KEY_W && (action == GLFW_PRESS ))
     {
-      if (helloTriangle.test < 1.0f) helloTriangle.test += .1f;
-      helloTriangle.y -= .1f;
-      std::cout << "w down\n";
-
+      helloTriangle.w_flag = true;
+    }
+    else if (key == GLFW_KEY_W && (action == GLFW_RELEASE))
+    {
+      helloTriangle.w_flag = false;
     }
 
-    if (key == GLFW_KEY_S && action == GLFW_PRESS)
+    if (key == GLFW_KEY_S && (action == GLFW_PRESS ))
     {
-      if (helloTriangle.test > 0.0f) helloTriangle.test -= .1f;
-      std::cout <<"s down\n";
-      helloTriangle.y += .1f;
+      helloTriangle.s_flag = true;
+    }
+    else if (key == GLFW_KEY_S && (action == GLFW_RELEASE))
+    {
+      helloTriangle.s_flag = false;
     }
 
-    if (key == GLFW_KEY_A && action == GLFW_PRESS)
+    if (key == GLFW_KEY_A && (action == GLFW_PRESS ))
     {
-      helloTriangle.x -= .1f;
+      helloTriangle.a_flag = true;
+    }
+    else if (key == GLFW_KEY_A && (action == GLFW_RELEASE))
+    {
+      helloTriangle.a_flag = false;
     }
 
-    if (key == GLFW_KEY_D && action == GLFW_PRESS)
+
+    if (key == GLFW_KEY_D && (action == GLFW_PRESS ))
     {
-      helloTriangle.x += .1f;
+      helloTriangle.d_flag = true;
     }
+    else if (key == GLFW_KEY_D && (action == GLFW_RELEASE))
+    {
+      helloTriangle.d_flag = false;
+    }
+
 }
 
 int main(int argc, char *argv[])

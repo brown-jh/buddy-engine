@@ -13,6 +13,14 @@ void HelloTriangle::mainLoop(GLFWwindow* window, InitHelper* initHelper)
   while (!glfwWindowShouldClose(window))
   {
     glfwPollEvents();
+
+    static auto startTime = std::chrono::high_resolution_clock::now();
+
+    auto currentTime = std::chrono::high_resolution_clock::now();
+    float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
+
+    initHelper->x += ((w_flag == true ? time * 0.001f : 0.0f) - (s_flag == true ? time * 0.001f : 0.0f));
+    initHelper->y += ((a_flag == true ? time * 0.001f : 0.0f) - (d_flag == true ? time * 0.001f : 0.0f)); 
     initHelper->drawFrame();
 
     //initHelper-> vertices[0] = {{0.0f, -0.5f}, {1.0f, test, 0.0f}};

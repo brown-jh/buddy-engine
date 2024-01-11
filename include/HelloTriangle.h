@@ -8,6 +8,11 @@ class HelloTriangle
         float x = 0.0;
         float y = 0.0;
 
+        bool w_flag = false;
+        bool s_flag = false;
+        bool a_flag = false;
+        bool d_flag = false;
+
 
     private:
         void mainLoop(GLFWwindow* window, InitHelper* initHelper);
